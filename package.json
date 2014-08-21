@@ -1,0 +1,33 @@
+{
+  "name": "create-project",
+  "version": "0.0.0",
+  "description": "Create a new project based on a branch in a github repo. Supports basic format strings",
+  "main": "bin.js",
+  "dependencies": {
+    "gunzip-maybe": "^1.0.2",
+    "minimist": "^1.1.0",
+    "read": "^1.0.5",
+    "request": "^2.40.0"
+  },
+  "devDependencies": {},
+  "bin": {
+    "create-project": "./bin.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafintosh/create-project"
+  },
+  "keywords": [
+    "create",
+    "project",
+    "scaffold",
+    "template",
+    "templating"
+  ],
+  "author": "Mathias Buus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mafintosh/create-project/issues"
+  },
+  "homepage": "https://github.com/mafintosh/create-project"
+}
