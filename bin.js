@@ -14,8 +14,9 @@ var CONFIG = path.join(process.env.HOME || process.env.USERPROFILE, '.config/cre
 var conf = fs.existsSync(CONFIG) ? require(CONFIG) : {}
 var argv = minimist(process.argv.slice(2), {alias:{configure:'c'}, boolean:'c'})
 
-var name = argv._[0]
+var dir = argv._[0]
 var repo = argv._[1]
+var name = dir && path.basename(dir)
 
 var parse = function(str) {
   var branch = str.split('#')[1] || 'master'
@@ -141,4 +142,7 @@ request('https://github.com/'+repo.user+'/'+repo.repo+'/archive/'+repo.branch+'.
     }
   })
   .pipe(gunzip())
-  .pipe(tar.extract('repo', {strip:1, mapStream:formatter}))
+  .pipe(tar.extract(name, {strip:1, mapStream:formatter}))
+  .on('finish', function() {
+    console.log('Project created in %s', path.resolve(dir))
+  })
