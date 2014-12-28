@@ -128,7 +128,7 @@ var formatter = function(stream) {
   def.name = name
 
   return stream.pipe(format(function(name) {
-    return argv[name] || def[name] || name
+    return argv[name] || def[name] || '{{'+name+'}}'
   }))
 }
 
