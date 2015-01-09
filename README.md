@@ -23,6 +23,16 @@ a command line parameter with the same name (`--variable [value]`)
 
 Per default the variable `name` is set to the project name
 
+## Other Sources
+
+Sometimes your templates dont live in github, so here are some alternate ways to retrieve them
+
+```
+create-project new-project-name --url=http://gitlab.internal.com/project-templates/npm-module/repository/archive.tar.gz?ref=master
+create-project new-project-name --file=archive.tar.gz
+```
+
+
 ## Defaults
 
 If you don't want to type the repo name everytime or want to store default format variables, use `--configure`
