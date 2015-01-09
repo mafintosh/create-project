@@ -116,12 +116,38 @@ var usage = function() {
   process.exit(1)
 }
 
-if (repo && repo.indexOf('/') === -1 && conf.github) repo = conf.github.user+'/'+conf.github.repo+'#'+repo
 
-if (repo) repo = parse(repo)
-else if (conf.github) repo = conf.github
+var gzip_stream, gzip_src;
 
-if (!repo || !name) return usage()
+var failed_http = function(response) {
+  if (response.statusCode !== 200) {
+    console.log('Fetch failed! Status code: '+response.statusCode)
+    process.exit(4)
+  }
+}
+
+if (argv.file) {
+  gzip_src = argv.file;
+  gzip_stream = fs.createReadStream(argv.file);
+}
+else if (argv.url) {
+  gzip_src = argv.url;
+  gzip_stream = request(argv.url)
+  gzip_stream.on('response', failed_http)
+} else {
+  if (repo && repo.indexOf('/') === -1 && conf.github) repo = conf.github.user+'/'+conf.github.repo+'#'+repo
+
+  if (repo) repo = parse(repo)
+  else if (conf.github) repo = conf.github
+
+  if (!repo || !name) return usage()
+
+  gzip_src = repo.user+'/'+repo.repo+'#'+repo.branch
+  gzip_stream = request('https://github.com/'+repo.user+'/'+repo.repo+'/archive/'+repo.branch+'.tar.gz')
+  gzip_stream.on('response', failed_http)
+}
+
+console.log('Creating new project %s from %s', name, gzip_src)
 
 var formatter = function(stream) {
   var def = conf.defaults || {}
@@ -132,15 +158,8 @@ var formatter = function(stream) {
   }))
 }
 
-console.log('Creating new project %s from %s', name, repo.user+'/'+repo.repo+'#'+repo.branch)
 
-request('https://github.com/'+repo.user+'/'+repo.repo+'/archive/'+repo.branch+'.tar.gz')
-  .on('response', function(response) {
-    if (response.statusCode !== 200) {
-      console.log('Fetch from github failed! Status code: '+response.statusCode)
-      process.exit(4)
-    }
-  })
+gzip_stream
   .pipe(gunzip())
   .pipe(tar.extract(name, {strip:1, mapStream:formatter}))
   .on('finish', function() {
