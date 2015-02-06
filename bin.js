@@ -20,13 +20,16 @@ var name = dir && path.basename(dir)
 
 var parse = function(str) {
   var branch = str.split('#')[1] || 'master'
-  var parts = str.split('#')[0].split(/[:\/]/)
+  var parts = str.split('#')[0].replace(/\.git$/, '').split(/[:\/]/)
 
   if (parts.length < 2) return null
 
+  var repo = parts.pop()
+  var user = parts.pop()
+
   return {
-    user: parts[0],
-    repo: parts[1],
+    user: user,
+    repo: repo,
     branch: branch
   }
 }
