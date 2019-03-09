@@ -8,8 +8,8 @@
     "minimist": "^1.1.0",
     "read": "^1.0.5",
     "request": "^2.40.0",
-    "streaming-format": "^1.0.0",
-    "tar-fs": "^0.5.0"
+    "streaming-format": "^2.0.0",
+    "tar-fs": "^2.0.0"
   },
   "devDependencies": {},
   "bin": {
